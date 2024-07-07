@@ -70,8 +70,26 @@ def convert_all(stations_lines):
     except Exception as e:
         logging.error(f'Error converting: {e}')
 
+def get_ids():
+    try:
+        logging.info(f'Getting ids')
+        response = requests.get(URL)
+        soup = BeautifulSoup(response.text, 'html.parser')
 
+        sections = soup.find_all('section')
+
+        ids = [section.get('id') for section in sections]
+
+        logging.info(f'Done fetching ids')
+
+        return ids
+
+    except Exception as e:
+        logging.error(f'Error fetching id names {e}')
 
 if __name__ == '__main__':
-    convert_all(['RedLine', 'PinkLine', 'VioletLine', 'YellowLine', 'GreenLine', 'BlueLine', 'GrayLine'])
 
+    station_names = get_ids()
+    print(station_names)
+
+    convert_all(station_names)
